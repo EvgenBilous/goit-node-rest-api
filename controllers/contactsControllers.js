@@ -3,15 +3,13 @@ import {
   getContactById,
   removeContact,
   addContact,
+  updateContact,
 } from '../services/contactsServices.js';
-
-// import contacts from '../db/contacts.json';
 
 /**
  * Викликає функцію-сервіс listContacts для роботи з json-файлом contacts.json
 Повертає масив всіх контактів в json-форматі зі статусом 200
- * @param {*} req 
- * @param {*} res 
+
  */
 
 export const getAllContacts = async (req, res) => {
@@ -27,12 +25,9 @@ export const getAllContacts = async (req, res) => {
 Викликає функцію-сервіс getContactById для роботи з json-файлом contacts.json
 Якщо контакт за id знайдений, повертає об'єкт контакту в json-форматі зі статусом 200
 Якщо контакт за id не знайдено, повертає json формату {"message": "Not found"} зі статусом 404
- * @param {*} req 
- * @param {*} res 
- */
-// app.get('/api/contacts:id', (req, res) = {
 
-// })
+ */
+
 export const getOneContact = async (req, res) => {
   const contact = await getContactById(req.params.id);
 
@@ -49,8 +44,7 @@ export const getOneContact = async (req, res) => {
 Якщо контакт за id знайдений і видалений, повертає об'єкт видаленого контакту в json-форматі зі статусом 200
 Якщо контакт за id не знайдено, повертає json формату {"message": "Not found"} зі статусом 404
 
- * @param {*} req 
- * @param {*} res 
+
  */
 export const deleteContact = async (req, res) => {
   const removed_contact = await removeContact(req.params.id);
@@ -66,8 +60,7 @@ export const deleteContact = async (req, res) => {
 Якщо в body немає якихось обов'язкових полів (або передані поля мають не валідне значення), повертає json формату {"message": error.message} (де error.message - змістовне повідомлення з суттю помилки) зі статусом 400
 Якщо body валідне, викликає функцію-сервіс addContact для роботи з json-файлом contacts.json, з передачею їй даних з body
 За результатом роботи функції повертає новостворений об'єкт з полями {id, name, email, phone} і статусом 201
- * @param {*} req 
- * @param {*} res 
+
  */
 
 export const createContact = async (req, res) => {
@@ -85,7 +78,7 @@ export const createContact = async (req, res) => {
 Якщо контакт за id не знайдено, повертає json формату {"message": "Not found"} зі статусом 404 
  */
 
-export const updateContact = async (req, res) => {
+export const changeContact = async (req, res) => {
   console.log('dsfasdfasfdasfasfasf', req.body);
   if (!Object.keys(req.body).length) {
     return res
@@ -93,5 +86,8 @@ export const updateContact = async (req, res) => {
       .json({ message: 'Body must have at least one field' });
   }
   const updated_contact = await updateContact(req.params.id, req.body);
+  if (!updated_contact) {
+    return res.status(404).json({ message: 'Not found' });
+  }
   res.status(200).json(updated_contact);
 };

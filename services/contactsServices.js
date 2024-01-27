@@ -2,12 +2,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { nanoid } from 'nanoid';
-import { HttpError } from '../helpers/HttpError.js';
 
 const contactsPath = path.resolve(process.cwd(), 'db', 'contacts.json');
-
-console.log(contactsPath);
-const id = nanoid();
 
 async function listContacts() {
   try {
@@ -58,7 +54,7 @@ async function addContact({ name, email, phone }) {
   try {
     const data = await fs.readFile(contactsPath, 'utf-8');
     const contacts = JSON.parse(data);
-    const newContact = { id, name, email, phone };
+    const newContact = { id: nanoid(), name, email, phone };
 
     const updatedContacts = [...contacts, newContact];
     await fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
@@ -75,7 +71,7 @@ async function updateContact(id, contact_data) {
     const contacts = JSON.parse(data);
     const contact = contacts.find(element => element.id === id);
     if (!contact) {
-      throw new HttpError(404);
+      return null;
     }
 
     const updated_contact = { ...contact, ...contact_data };
