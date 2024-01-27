@@ -1,8 +1,11 @@
 // contacts.js
 import fs from 'fs/promises';
 import path from 'path';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
+import { HttpError } from '../helpers/HttpError.js';
+
 const contactsPath = path.resolve(process.cwd(), 'db', 'contacts.json');
+
 console.log(contactsPath);
 const id = nanoid();
 
@@ -10,7 +13,7 @@ async function listContacts() {
   try {
     const data = await fs.readFile(contactsPath, 'utf-8');
     const contacts = JSON.parse(data);
-    return console.table(contacts);
+    return contacts;
   } catch (error) {
     console.error(error.message);
   }
@@ -42,11 +45,8 @@ async function removeContact(contactId) {
         contact => contact.id !== contactId
       );
       await fs.writeFile(contactsPath, JSON.stringify(updatedContacts));
-      const removed_contact = contacts.filter(
-        contact => contact.id === contactId
-      );
-      const deleted_contact = removed_contact[0];
-      return deleted_contact;
+
+      return contact;
     }
   } catch (error) {
     console.error(null);
@@ -54,7 +54,7 @@ async function removeContact(contactId) {
 }
 
 // add new contact
-async function addContact(name, email, phone) {
+async function addContact({ name, email, phone }) {
   try {
     const data = await fs.readFile(contactsPath, 'utf-8');
     const contacts = JSON.parse(data);
@@ -67,5 +67,34 @@ async function addContact(name, email, phone) {
     console.error(error.message);
   }
 }
+//update contact
 
-export { listContacts, getContactById, removeContact, addContact };
+async function updateContact(id, contact_data) {
+  try {
+    const data = await fs.readFile(contactsPath, 'utf-8');
+    const contacts = JSON.parse(data);
+    const contact = contacts.find(element => element.id === id);
+    if (!contact) {
+      throw new HttpError(404);
+    }
+
+    const updated_contact = { ...contact, ...contact_data };
+    const filtered_contacts = contacts.filter(contact => contact.id !== id);
+
+    await fs.writeFile(
+      contactsPath,
+      JSON.stringify([...filtered_contacts, updated_contact])
+    );
+    return updated_contact;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContact,
+};
