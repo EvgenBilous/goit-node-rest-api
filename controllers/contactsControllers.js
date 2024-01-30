@@ -15,9 +15,7 @@ import {
 export const getAllContacts = async (req, res) => {
   const allContacts = await listContacts();
 
-  res.status(200).json({
-    allContacts,
-  });
+  res.status(200).json([...allContacts]);
 };
 
 /**
@@ -35,7 +33,7 @@ export const getOneContact = async (req, res) => {
     return res.status(404).json({ message: 'Not found' });
   }
 
-  res.status(200).json({ contact });
+  res.status(200).json(contact);
 };
 
 /**
@@ -51,7 +49,7 @@ export const deleteContact = async (req, res) => {
   if (!removed_contact) {
     return res.status(404).json({ message: 'Not found' });
   }
-  res.status(200).json({ removed_contact });
+  res.status(200).json(removed_contact);
 };
 
 /**
@@ -65,7 +63,7 @@ export const deleteContact = async (req, res) => {
 
 export const createContact = async (req, res) => {
   const new_contact = await addContact(req.body);
-  res.status(201).json({ new_contact });
+  res.status(201).json(new_contact);
 };
 
 /**
