@@ -77,7 +77,6 @@ export const createContact = async (req, res) => {
  */
 
 export const changeContact = async (req, res) => {
-  console.log('dsfasdfasfdasfasfasf', req.body);
   if (!Object.keys(req.body).length) {
     return res
       .status(400)
