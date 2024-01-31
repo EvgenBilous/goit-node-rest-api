@@ -48,7 +48,10 @@ async function addContact({ name, email, phone }) {
   try {
     const newContact = await Contact.create({ name, email, phone });
 
-    return newContact;
+    return {
+      ...newContact._doc,
+      __v: undefined,
+    };
   } catch (error) {
     console.error(error.message);
   }
