@@ -1,6 +1,6 @@
-const { isValidObjectId } = require('mongoose');
-
-const { HttpError } = require('../helpers');
+//const { isValidObjectId } = require('mongoose');
+import { isValidObjectId } from 'mongoose';
+import { HttpError } from '../helpers/HttpError.js';
 
 const isValidId = (req, res, next) => {
   const { id } = req.params;
@@ -10,4 +10,4 @@ const isValidId = (req, res, next) => {
   next();
 };
 
-module.exports = isValidId;
+export default isValidId;
