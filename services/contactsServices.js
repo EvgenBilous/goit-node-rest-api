@@ -6,9 +6,9 @@ import { Contact } from '../models/contactModel.js';
 
 const contactsPath = path.resolve(process.cwd(), 'db', 'contacts.json');
 
-async function listContacts() {
+async function listContacts(userId) {
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ owner: userId });
 
     return contacts;
   } catch (error) {
@@ -44,9 +44,14 @@ async function removeContact(contactId) {
 }
 
 // add new contact
-async function addContact({ name, email, phone }) {
+async function addContact(userId, { name, email, phone }) {
   try {
-    const newContact = await Contact.create({ name, email, phone });
+    const newContact = await Contact.create({
+      name,
+      email,
+      phone,
+      owner: userId,
+    });
 
     return {
       ...newContact._doc,

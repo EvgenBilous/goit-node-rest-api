@@ -13,7 +13,7 @@ import {
  */
 
 export const getAllContacts = async (req, res) => {
-  const allContacts = await listContacts();
+  const allContacts = await listContacts(req.user._id);
 
   res.status(200).json([...allContacts]);
 };
@@ -62,7 +62,7 @@ export const deleteContact = async (req, res) => {
  */
 
 export const createContact = async (req, res) => {
-  const new_contact = await addContact(req.body);
+  const new_contact = await addContact(req.user._id, req.body);
   res.status(201).json(new_contact);
 };
 
