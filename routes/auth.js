@@ -2,10 +2,10 @@ import validateBody from '../helpers/validateBody.js';
 import isValidId from '../helpers/isValidId.js';
 import {
   createContactSchema,
-  loginSchema,
   updateContactSchema,
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
+import { loginSchema } from '../schemas/userSchemas.js';
 import express from 'express';
 import { signupSchema } from '../schemas/userSchemas.js';
 import { signup, login, logout, current } from '../controllers/auth.js';

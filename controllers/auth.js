@@ -16,7 +16,6 @@ export const signup = async (req, res, next) => {
 
     const newUser = await createUser({ ...req.body });
     res.status(201).json({
-      token: newUser.token,
       user: {
         name: newUser.name,
         email: newUser.email,
@@ -36,6 +35,7 @@ export const login = async (req, res, next) => {
     }
 
     const isPasswordChecked = await bcrypt.compare(password, user.password);
+
     if (!isPasswordChecked) {
       throw HttpError(400);
     }
@@ -44,7 +44,7 @@ export const login = async (req, res, next) => {
       id: user._id,
     };
     const tokenIssue = jwt.sign(payload, SECRET_KEY);
-
+    console.log(tokenIssue);
     await User.findByIdAndUpdate(user._id, { token: tokenIssue });
 
     res.json({
