@@ -3,7 +3,9 @@ import { User } from '../models/userModels.js';
 import { createUser, emailUnique } from '../services/userServices.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
+import path from 'path';
+import Jimp from 'jimp';
+import fs from 'fs/promises';
 const { SECRET_KEY } = process.env;
 
 export const signup = async (req, res, next) => {
@@ -73,6 +75,30 @@ export const current = async (req, res, next) => {
     const { email, subscription } = req.user;
 
     res.json({ email, subscription });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateAvatar = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    //to get file
+
+    const { path: tempUpload, originalname } = req.file;
+    const fileName = `${_id}_${originalname}`;
+
+    const resultUpload = path.resolve('public/avatars', fileName);
+    //to store in the storage
+    const image = await Jimp.read(tempUpload);
+    await image.resize(250, 250).writeAsync(tempUpload);
+    await fs.rename(tempUpload, resultUpload);
+    const avatarURL = path.join('avatars', fileName);
+
+    //To add to DB
+    await User.findByIdAndUpdate(_id, { avatarURL });
+
+    res.json({ avatarURL });
   } catch (error) {
     next(error);
   }
