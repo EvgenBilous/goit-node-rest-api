@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import { User } from '../models/userModels.js';
 import bcrypt from 'bcrypt';
 import gravatar from 'gravatar';
+import { nanoid } from 'nanoid';
+import { sendEmail } from '../helpers/sendEmail.js';
 
 dotenv.config();
 
@@ -18,23 +20,19 @@ export const createUser = async userData => {
   const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
   const avatarURL = gravatar.url(userData.email);
+  const verificationToken = nanoid();
 
   const user = await User.create({
     ...userData,
     password: hashedPassword,
     avatarURL,
+    verificationToken,
   });
+  await sendEmail(verificationToken);
+  //   const newUser = await User.findByIdAndUpdate(
+  //     user._id,
 
-  const payload = {
-    id: user._id,
-  };
+  //     { new: true });
 
-  const token = jwt.sign(payload, SECRET_KEY);
-  console.log(token);
-  const newUser = await User.findByIdAndUpdate(
-    user._id,
-    { token },
-    { new: true }
-  );
-  return newUser;
+  return { email: user.email };
 };

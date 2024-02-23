@@ -14,6 +14,7 @@ import {
   logout,
   current,
   updateAvatar,
+  verificationToken,
 } from '../controllers/auth.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/uploadAvatar.js';
@@ -30,5 +31,6 @@ userRouter.patch(
   upload.single('avatar'),
   updateAvatar
 );
+userRouter.get('/verify/:verifyToken', verificationToken);
 
 export default userRouter;

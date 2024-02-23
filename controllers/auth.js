@@ -35,7 +35,9 @@ export const login = async (req, res, next) => {
     if (!user) {
       throw HttpError(401);
     }
-
+    if (!user.verify) {
+      throw HttpError(400, 'User not verified');
+    }
     const isPasswordChecked = await bcrypt.compare(password, user.password);
 
     if (!isPasswordChecked) {
@@ -99,6 +101,24 @@ export const updateAvatar = async (req, res, next) => {
     await User.findByIdAndUpdate(_id, { avatarURL });
 
     res.json({ avatarURL });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verificationToken = async (req, res, next) => {
+  try {
+    //get token
+    const { verifyToken } = req.params;
+
+    const user = await User.findOneAndUpdate(
+      { verificationToken: verifyToken },
+      { verify: true, verificationToken: null }
+    );
+    if (!user) {
+      throw HttpError(404, 'User not found');
+    }
+    res.json({ message: 'User verified' });
   } catch (error) {
     next(error);
   }
