@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 
 const { SECRET_KEY } = process.env;
 
-export const signup = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await emailUnique(email);
@@ -19,6 +19,7 @@ export const signup = async (req, res, next) => {
       user: {
         name: newUser.name,
         email: newUser.email,
+        subscription: newUser.subscription,
       },
     });
   } catch (error) {
@@ -31,13 +32,13 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      throw HttpError(401);
+      throw HttpError(401, 'Email or password is wrong');
     }
 
     const isPasswordChecked = await bcrypt.compare(password, user.password);
 
     if (!isPasswordChecked) {
-      throw HttpError(400);
+      throw HttpError(400, 'Email or password is wrong');
     }
     //create token
     const payload = {

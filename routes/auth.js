@@ -8,11 +8,11 @@ import {
 import { loginSchema } from '../schemas/userSchemas.js';
 import express from 'express';
 import { signupSchema } from '../schemas/userSchemas.js';
-import { signup, login, logout, current } from '../controllers/auth.js';
+import { register, login, logout, current } from '../controllers/auth.js';
 import { authenticate } from '../middleware/authenticate.js';
 
 const userRouter = express.Router();
-userRouter.post('/signup', validateBody(signupSchema), signup);
+userRouter.post('/register', validateBody(signupSchema), register);
 userRouter.post('/login', validateBody(loginSchema), login);
 
 userRouter.post('/logout', authenticate, logout);
