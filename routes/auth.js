@@ -10,6 +10,7 @@ import express from 'express';
 import { signupSchema } from '../schemas/userSchemas.js';
 import { register, login, logout, current } from '../controllers/auth.js';
 import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/uploadAvatar.js';
 
 const userRouter = express.Router();
 userRouter.post('/register', validateBody(signupSchema), register);
@@ -17,5 +18,11 @@ userRouter.post('/login', validateBody(loginSchema), login);
 
 userRouter.post('/logout', authenticate, logout);
 userRouter.get('/current', authenticate, current);
+userRouter.patch(
+  '/avatars',
+  authenticate,
+  upload.single('avatar'),
+  updateAvatar
+);
 
 export default userRouter;
