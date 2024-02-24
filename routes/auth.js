@@ -16,8 +16,9 @@ import {
   updateAvatar,
   verificationToken,
 } from '../controllers/auth.js';
-import { authenticate } from '../middleware/authenticate.js';
+import { authenticate, emailSchemaMid } from '../middleware/authenticate.js';
 import { upload } from '../middleware/uploadAvatar.js';
+import { resendVerifyEmail } from '../helpers/sendEmail.js';
 
 const userRouter = express.Router();
 userRouter.post('/signup', validateBody(signupSchema), signup);
@@ -32,5 +33,5 @@ userRouter.patch(
   updateAvatar
 );
 userRouter.get('/verify/:verifyToken', verificationToken);
-
+userRouter.post('/verify', emailSchemaMid, resendVerifyEmail);
 export default userRouter;

@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import path from 'path';
 import Jimp from 'jimp';
 import fs from 'fs/promises';
+import { catchAsync } from '../helpers/catchAsync.js';
 const { SECRET_KEY } = process.env;
 
 export const signup = async (req, res, next) => {
@@ -123,3 +124,22 @@ export const verificationToken = async (req, res, next) => {
     next(error);
   }
 };
+
+export const resendVerifyEmail = catchAsync(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) throw HttpError(401, 'Email not found');
+
+  if (user.verify) throw HttpError(400, 'Verification has already been passed');
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify your email',
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click here to verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.json({ message: 'Verification email sent' });
+});

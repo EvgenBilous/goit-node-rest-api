@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import nodemailer from 'nodemailer';
+import { User } from '../models/userModels.js';
+import { catchAsync } from './catchAsync.js';
 const { EMAIL_FROM, EMAIL_PASSWORD } = process.env;
 
 const nodemailerConfig = {
@@ -10,6 +12,7 @@ const nodemailerConfig = {
     pass: EMAIL_PASSWORD,
   },
 };
+
 let transporter = nodemailer.createTransport(nodemailerConfig);
 
 export const sendEmail = async tokenVerify => {
