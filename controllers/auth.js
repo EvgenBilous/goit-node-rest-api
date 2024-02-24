@@ -84,7 +84,9 @@ export const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
     //to get file
-
+    if (!req.file) {
+      throw HttpError(400, 'Avatar is required');
+    }
     const { path: tempUpload, originalname } = req.file;
     const fileName = `${_id}_${originalname}`;
 
