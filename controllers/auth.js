@@ -17,7 +17,6 @@ export const register = async (req, res, next) => {
     const newUser = await createUser({ ...req.body });
     res.status(201).json({
       user: {
-        name: newUser.name,
         email: newUser.email,
         subscription: newUser.subscription,
       },
