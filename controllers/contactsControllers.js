@@ -13,7 +13,11 @@ import {
  */
 
 export const getAllContacts = async (req, res) => {
-  const allContacts = await listContacts(req.user._id);
+  const { _id: owner } = req.user;
+
+  const filteredContacts = favorite ? { owner, favorite } : { owner };
+
+  const allContacts = await listContacts(filteredContacts, { skip, limit });
 
   res.status(200).json([...allContacts]);
 };
@@ -27,7 +31,7 @@ export const getAllContacts = async (req, res) => {
  */
 
 export const getOneContact = async (req, res) => {
-  const contact = await getContactById(req.params.id);
+  const contact = await getContactById(req.params.id, owner);
 
   if (!contact) {
     return res.status(404).json({ message: 'Not found' });
@@ -45,7 +49,8 @@ export const getOneContact = async (req, res) => {
 
  */
 export const deleteContact = async (req, res) => {
-  const removed_contact = await removeContact(req.params.id);
+  const { _id: owner } = req.user;
+  const removed_contact = await removeContact(req.params.id, owner);
   if (!removed_contact) {
     return res.status(404).json({ message: 'Not found' });
   }
@@ -62,7 +67,8 @@ export const deleteContact = async (req, res) => {
  */
 
 export const createContact = async (req, res) => {
-  const new_contact = await addContact(req.user._id, req.body);
+  const { _id: owner } = req.user;
+  const new_contact = await addContact(req.user._id, req.body, owner);
   res.status(201).json(new_contact);
 };
 
@@ -82,7 +88,7 @@ export const changeContact = async (req, res) => {
       .status(400)
       .json({ message: 'Body must have at least one field' });
   }
-  const updated_contact = await updateContact(req.params.id, req.body);
+  const updated_contact = await updateContact(req.params.id, req.body, owner);
   if (!updated_contact) {
     return res.status(404).json({ message: 'Not found' });
   }
