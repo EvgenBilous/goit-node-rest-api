@@ -9,7 +9,7 @@ import fs from 'fs/promises';
 import { catchAsync } from '../helpers/catchAsync.js';
 const { SECRET_KEY } = process.env;
 
-export const signup = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await emailUnique(email);
@@ -20,8 +20,8 @@ export const signup = async (req, res, next) => {
     const newUser = await createUser({ ...req.body });
     res.status(201).json({
       user: {
-        name: newUser.name,
         email: newUser.email,
+        subscription: newUser.subscription,
       },
     });
   } catch (error) {
@@ -34,7 +34,7 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      throw HttpError(401);
+      throw HttpError(401, 'Email or password is wrong');
     }
     if (!user.verify) {
       throw HttpError(400, 'User not verified');
@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
     const isPasswordChecked = await bcrypt.compare(password, user.password);
 
     if (!isPasswordChecked) {
-      throw HttpError(400);
+      throw HttpError(400, 'Email or password is wrong');
     }
     //create token
     const payload = {
@@ -87,7 +87,9 @@ export const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
     //to get file
-
+    if (!req.file) {
+      throw HttpError(400, 'Avatar is required');
+    }
     const { path: tempUpload, originalname } = req.file;
     const fileName = `${_id}_${originalname}`;
 
