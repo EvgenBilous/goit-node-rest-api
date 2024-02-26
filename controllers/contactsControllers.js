@@ -68,7 +68,7 @@ export const deleteContact = async (req, res) => {
 
 export const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const new_contact = await addContact(req.user._id, req.body, owner);
+  const new_contact = await addContact(req.user._id, req.body);
   res.status(201).json(new_contact);
 };
 
