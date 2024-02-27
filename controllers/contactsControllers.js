@@ -88,7 +88,7 @@ export const changeContact = async (req, res) => {
       .status(400)
       .json({ message: 'Body must have at least one field' });
   }
-  const updated_contact = await updateContact(req.params.id, req.body, owner);
+  const updated_contact = await updateContact(req.params.id, req.body);
   if (!updated_contact) {
     return res.status(404).json({ message: 'Not found' });
   }
