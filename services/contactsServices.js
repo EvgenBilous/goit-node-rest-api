@@ -66,7 +66,7 @@ async function addContact(userId, { name, email, phone }) {
 }
 //update contact
 
-async function updateContact(id, contact_data, owner) {
+async function updateContact(id, contact_data) {
   try {
     const contact = await Contact.findById(id);
 
