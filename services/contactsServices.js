@@ -74,7 +74,7 @@ async function updateContact(id, contact_data) {
       return null;
     }
     const updated_contact = await Contact.findOneAndUpdate(
-      { _id: id, owner },
+      { _id: id },
       contact_data,
       {
         new: true,
