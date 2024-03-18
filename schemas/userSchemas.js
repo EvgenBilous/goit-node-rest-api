@@ -10,12 +10,10 @@ export const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-export const emailSchema = data =>
-  Joi.object()
-    .options({ abortEarly: false })
-    .keys({
-      email: Joi.string().required().messages({
-        'any.required': 'Missing required email field',
-      }),
-    })
-    .validate(data);
+export const emailSchema = Joi.object({
+  // .options({ abortEarly: false })
+  // .keys({
+  email: Joi.string().required().messages({
+    'any.required': 'Missing required email field',
+  }),
+});

@@ -5,10 +5,21 @@ import {
   updateContactSchema,
   updateFavoriteSchema,
 } from '../schemas/contactsSchemas.js';
-import { loginSchema } from '../schemas/userSchemas.js';
+import {
+  loginSchema,
+  signupSchema,
+  emailSchema,
+} from '../schemas/userSchemas.js';
 import express from 'express';
-import { signupSchema } from '../schemas/userSchemas.js';
-import { register, login, logout, current } from '../controllers/auth.js';
+//import {  } from '../schemas/userSchemas.js';
+import {
+  register,
+  login,
+  logout,
+  current,
+  updateAvatar,
+  verificationToken,
+} from '../controllers/auth.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/uploadAvatar.js';
 import { resendVerifyEmail } from '../helpers/sendEmail.js';
@@ -26,5 +37,5 @@ userRouter.patch(
   updateAvatar
 );
 userRouter.get('/verify/:verifyToken', verificationToken);
-userRouter.post('/verify', emailSchemaMid, resendVerifyEmail);
+userRouter.post('/verify', validateBody(emailSchema), resendVerifyEmail);
 export default userRouter;
