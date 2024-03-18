@@ -1,5 +1,6 @@
+import { catchAsync } from '../helpers/catchAsync.js';
 import {
-  listContacts,
+  getContactsList,
   getContactById,
   removeContact,
   addContact,
@@ -12,16 +13,11 @@ import {
 
  */
 
-export const getAllContacts = async (req, res) => {
-  const { _id: owner } = req.user;
-
-  const filteredContacts = favorite ? { owner, favorite } : { owner };
-
-  const allContacts = await listContacts(filteredContacts, { skip, limit });
-
-  res.status(200).json([...allContacts]);
-};
-
+export const getAllContacts = catchAsync(async (req, res) => {
+  const ownerId = req.user.id;
+  const contacts = await contactsServices.getContactsList(ownerId);
+  res.status(200).json(contacts);
+});
 /**
  * @ GET /api/contacts/:id
 Викликає функцію-сервіс getContactById для роботи з json-файлом contacts.json

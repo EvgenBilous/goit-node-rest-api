@@ -6,15 +6,8 @@ import { Contact } from '../models/contactModel.js';
 
 const contactsPath = path.resolve(process.cwd(), 'db', 'contacts.json');
 
-async function listContacts(userId) {
-  try {
-    const contacts = await Contact.find({ owner: userId });
+export const getContactsList = ownerId => Contact.find({ owner: ownerId });
 
-    return contacts;
-  } catch (error) {
-    console.error(error.message);
-  }
-}
 async function getContactById(contactId, owner) {
   try {
     const contact = await Contact.findOne({ _id: contactId, owner });
@@ -86,10 +79,4 @@ async function updateContact(id, contact_data) {
   }
 }
 
-export {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-};
+export { getContactById, removeContact, addContact, updateContact };
