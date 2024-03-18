@@ -37,7 +37,7 @@ export const login = async (req, res, next) => {
     const isPasswordChecked = await bcrypt.compare(password, user.password);
 
     if (!isPasswordChecked) {
-      throw HttpError(400, 'Email or password is wrong');
+      throw HttpError(401, 'Email or password is wrong');
     }
     //create token
     const payload = {
