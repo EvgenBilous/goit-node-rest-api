@@ -15,7 +15,7 @@ import {
 
 export const getAllContacts = catchAsync(async (req, res) => {
   const ownerId = req.user.id;
-  const contacts = await contactsServices.getContactsList(ownerId);
+  const contacts = await getContactsList(ownerId);
   res.status(200).json(contacts);
 });
 /**
