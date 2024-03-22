@@ -3,7 +3,7 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 import { User } from '../models/userModels.js';
 import { catchAsync } from './catchAsync.js';
-const { EMAIL_FROM, EMAIL_PASSWORD } = process.env;
+const { BASE_URL, EMAIL_FROM, EMAIL_PASSWORD } = process.env;
 
 const nodemailerConfig = {
   service: 'gmail',
@@ -32,7 +32,7 @@ export const sendEmail = async tokenVerify => {
 export const resendVerifyEmail = catchAsync(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
-
+  console.log(BASE_URL);
   if (!user) throw HttpError(401, 'Email not found');
 
   if (user.verify) throw HttpError(400, 'Verification has already been passed');

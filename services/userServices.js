@@ -34,5 +34,5 @@ export const createUser = async userData => {
 
   //     { new: true });
 
-  return { email: user.email };
+  return { email: user.email, subscription: user.subscription };
 };

@@ -19,10 +19,10 @@ import {
   current,
   updateAvatar,
   verificationToken,
+  resendVerifyEmail,
 } from '../controllers/auth.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { upload } from '../middleware/uploadAvatar.js';
-import { resendVerifyEmail } from '../helpers/sendEmail.js';
 
 const userRouter = express.Router();
 userRouter.post('/register', validateBody(signupSchema), register);

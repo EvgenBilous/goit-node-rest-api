@@ -7,7 +7,8 @@ import path from 'path';
 import Jimp from 'jimp';
 import fs from 'fs/promises';
 import { catchAsync } from '../helpers/catchAsync.js';
-const { SECRET_KEY } = process.env;
+import { sendEmail } from '../helpers/sendEmail.js';
+const { SECRET_KEY, BASE_URL } = process.env;
 
 export const register = async (req, res, next) => {
   try {
@@ -16,7 +17,7 @@ export const register = async (req, res, next) => {
     if (user) {
       throw HttpError(409, 'Email in use');
     }
-
+    console.log(BASE_URL);
     const newUser = await createUser({ ...req.body });
     res.status(201).json({
       user: {
@@ -113,7 +114,7 @@ export const verificationToken = async (req, res, next) => {
   try {
     //get token
     const { verifyToken } = req.params;
-
+    console.log(await User.findOne({ verificationToken: verifyToken }));
     const user = await User.findOneAndUpdate(
       { verificationToken: verifyToken },
       { verify: true, verificationToken: null }
@@ -130,7 +131,9 @@ export const verificationToken = async (req, res, next) => {
 export const resendVerifyEmail = catchAsync(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
+  console.log(BASE_URL);
 
+  console.log(HttpError);
   if (!user) throw HttpError(401, 'Email not found');
 
   if (user.verify) throw HttpError(400, 'Verification has already been passed');
