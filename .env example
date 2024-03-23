@@ -2,5 +2,5 @@ CONNECTION_STRING =  'mongodb+srv://belousyevgen:<password>@cluster0.va2gd0n.mon
 SECRET_KEY=
 SECRET_KEY_EXPIRES= 
 EMAIL_FROM= 
-EMAIL_PASSWORD=
 BASE_URL=http://localhost:3000
+SENDGRID_API_KEY=
